@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Telepleo</title>
+<meta name="description" content="A simple, mobile-friendly teleprompter for reading your own scripts.">
+
+<!-- PWA / iOS home screen -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Telepleo">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+
+<link rel="stylesheet" href="styles.css">
+<meta name="robots" content="noindex, nofollow">
+<script src="gate.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ================= EDITOR VIEW ================= -->
+  <section id="editor-view" class="view is-active" aria-label="Editor">
+    <header class="editor-header">
+      <h1 class="app-title">Telepleo</h1>
+      <p class="app-subtitle">Paste your script, set a pace, and go.</p>
+    </header>
+
+    <div class="editor-body">
+      <textarea
+        id="script-input"
+        class="script-textarea"
+        placeholder="Paste or type your script here…"
+        spellcheck="true"
+        autocapitalize="sentences"
+      ></textarea>
+
+      <div class="editor-stats">
+        <span id="word-count">0 words</span>
+        <span class="dot">·</span>
+        <span id="read-time">0:00 at <span id="stat-wpm">150</span> WPM</span>
+      </div>
+
+      <div class="save-row">
+        <input type="text" id="script-name-input" class="script-name-input" placeholder="Name this script…" maxlength="60">
+        <button id="save-script-btn" class="btn btn-secondary">Save</button>
+      </div>
+
+      <div class="saved-scripts" id="saved-scripts-panel">
+        <h2 class="saved-scripts-heading">Saved scripts</h2>
+        <ul id="saved-scripts-list" class="saved-scripts-list">
+          <!-- populated by JS -->
+        </ul>
+        <p id="no-scripts-msg" class="no-scripts-msg">No saved scripts yet.</p>
+      </div>
+    </div>
+
+    <footer class="editor-footer">
+      <button id="start-btn" class="btn btn-primary btn-start" disabled>Start ▶</button>
+    </footer>
+  </section>
+
+  <!-- ================= PROMPTER VIEW ================= -->
+  <section id="prompter-view" class="view" aria-label="Prompter">
+
+    <div id="prompter-stage" class="prompter-stage focus-100">
+      <div id="prompter-viewport" class="prompter-viewport">
+        <div id="prompter-scroller" class="prompter-scroller">
+          <div id="prompter-text" class="prompter-text font-xs"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical scrub bar: drag or tap to jump to any point in the script -->
+    <div id="scrub-track" class="scrub-track" role="slider" aria-label="Scroll position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div id="scrub-thumb" class="scrub-thumb"></div>
+    </div>
+
+    <div id="prompter-controls" class="prompter-controls">
+
+      <div class="controls-row controls-row-top">
+        <button id="exit-btn" class="icon-btn" title="Back to editor" aria-label="Exit to editor">✕</button>
+        <div class="time-remaining" id="time-remaining">0:00 left</div>
+        <button id="mirror-btn" class="icon-btn" title="Mirror mode" aria-label="Toggle mirror mode" aria-pressed="false">⇋</button>
+      </div>
+
+      <div class="controls-row controls-row-mid">
+        <button id="restart-btn" class="icon-btn" title="Restart" aria-label="Restart">⟲</button>
+        <button id="play-pause-btn" class="play-btn" title="Play / Pause" aria-label="Play or pause">▶</button>
+        <div class="wpm-control">
+          <button id="wpm-down" class="icon-btn small" aria-label="Decrease speed">–</button>
+          <div class="wpm-readout"><span id="wpm-value">150</span><span class="wpm-unit">WPM</span></div>
+          <button id="wpm-up" class="icon-btn small" aria-label="Increase speed">+</button>
+        </div>
+      </div>
+
+      <div class="controls-row controls-row-bottom">
+        <input type="range" id="wpm-slider" min="100" max="200" step="1" value="150" aria-label="Reading speed in words per minute">
+      </div>
+
+    </div>
+
+    <!-- Settings panel: secondary settings pinned to the left edge, separate
+         from the play/pace bar above. Shares the same auto-hide behaviour
+         during playback (see settingsPanel wiring in app.js). -->
+    <aside id="settings-panel" class="settings-panel">
+
+      <div class="controls-row controls-row-font">
+        <span class="control-label">Text size</span>
+        <div class="font-size-buttons" role="group" aria-label="Font size">
+          <button class="font-btn is-active" data-size="xs">XS</button>
+          <button class="font-btn" data-size="sm">S</button>
+          <button class="font-btn" data-size="md">M</button>
+          <button class="font-btn" data-size="lg">L</button>
+          <button class="font-btn" data-size="xl">XL</button>
+        </div>
+      </div>
+
+      <div class="controls-divider" aria-hidden="true"></div>
+
+      <div class="controls-row controls-row-focus">
+        <span class="control-label">Focus</span>
+        <div class="focus-buttons" role="group" aria-label="Focus zoom size">
+          <button class="focus-btn is-active" data-focus="100">Full</button>
+          <button class="focus-btn" data-focus="75">75%</button>
+          <button class="focus-btn" data-focus="50">50%</button>
+          <button class="focus-btn" data-focus="25">25%</button>
+        </div>
+      </div>
+
+      <div class="controls-row controls-row-theme">
+        <span class="control-label">Background</span>
+        <div class="theme-buttons" role="group" aria-label="Background theme">
+          <button class="theme-btn is-active" data-theme="dark">Dark</button>
+          <button class="theme-btn" data-theme="light">Light</button>
+        </div>
+      </div>
+
+      <div class="controls-row controls-row-duration">
+        <span class="control-label">Duration</span>
+        <div class="duration-input-group">
+          <input type="number" id="duration-input" min="1" max="120" placeholder="min" inputmode="numeric" aria-label="Target duration in minutes">
+          <button id="apply-duration-btn" class="btn btn-secondary btn-small">Apply</button>
+        </div>
+      </div>
+      <p id="duration-note" class="duration-note"></p>
+
+    </aside>
+
+    <!-- First-run tip -->
+    <div id="first-tip" class="first-tip is-hidden">
+      <div class="first-tip-inner">
+        <p><strong>Reading position</strong> — keep your eyes fixed about a third of the way down the screen. The text scrolls up past that point at a steady pace.</p>
+        <p><strong>Tap to jump</strong> — tap anywhere on the script to jump the scroll to that spot.</p>
+        <button id="dismiss-tip-btn" class="btn btn-primary btn-small">Got it</button>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
