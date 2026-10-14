@@ -702,7 +702,8 @@
     clearAutoHideTimer();
     autoHideTimer = setTimeout(() => {
       if (state.isPlaying && !state.scrubbing) {
-        controlsBar.classList.add('is-hidden');
+        // The bottom play/speed bar stays on screen while the script scrolls;
+        // only the settings panel and scrub handle fade away.
         settingsPanel.classList.add('is-hidden');
         scrubTrack.classList.remove('is-visible');
       }

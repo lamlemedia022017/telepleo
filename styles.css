@@ -392,17 +392,26 @@ input {
   bottom: 0;
   z-index: 10;
   /* Extra right-side clearance so buttons never sit under the scrub bar. */
-  padding: 10px calc(max(14px, var(--safe-right)) + 36px) calc(14px + var(--safe-bottom)) max(14px, var(--safe-left));
-  /* Solid enough to keep every row legible now that the panel holds all
-     settings (not just play controls) — only the very top edge fades so it
-     still blends softly into the script text above. */
-  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.92) 82%, rgba(0,0,0,0) 100%);
+  padding: 6px calc(max(14px, var(--safe-right)) + 36px) calc(6px + var(--safe-bottom)) max(14px, var(--safe-left));
+  /* Compact, always-on bar: solid so script text never ghosts through the
+     buttons; a short fade (::before) blends it into the text above. */
+  background: rgba(0, 0, 0, 0.96);
   transition: opacity 0.3s ease, transform 0.3s ease;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
   max-height: calc(100% - 8px);
-  overflow-y: auto;
+}
+
+.prompter-controls::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 14px;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,0.96), rgba(0,0,0,0));
 }
 
 .prompter-controls.is-hidden {
@@ -418,18 +427,14 @@ input {
   gap: 10px;
 }
 
-.controls-row-top {
-  padding-top: var(--safe-top);
-}
-
 .icon-btn {
   background: var(--bg-control);
   color: var(--text);
   border: none;
   border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -439,21 +444,25 @@ input {
 .icon-btn:active { background: var(--bg-control-active); }
 
 .icon-btn.small {
-  width: 34px;
-  height: 34px;
-  font-size: 18px;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
   border-radius: 10px;
 }
 
 .time-remaining {
   color: var(--text-dim);
-  font-size: 13px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+  min-width: 56px;
+  white-space: nowrap;
 }
 
-.controls-row-mid {
-  justify-content: center;
-  gap: 20px;
+/* Main row: exit, restart, play, speed, mirror — one compact line. */
+.controls-row-main {
+  justify-content: space-between;
+  gap: 6px;
 }
 
 .play-btn {
@@ -461,9 +470,9 @@ input {
   color: #002826;
   border: none;
   border-radius: 50%;
-  width: 58px;
-  height: 58px;
-  font-size: 22px;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -473,36 +482,38 @@ input {
 .wpm-control {
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 140px;
-  justify-content: flex-end;
+  gap: 4px;
+  justify-content: center;
 }
 
 .wpm-readout {
   display: flex;
   flex-direction: column;
   align-items: center;
-  line-height: 1.1;
-  min-width: 44px;
+  line-height: 1;
+  min-width: 38px;
 }
 
 #wpm-value {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .wpm-unit {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-dim);
   letter-spacing: 0.04em;
 }
 
 .controls-row-bottom {
   padding: 0 2px;
+  gap: 12px;
 }
 
 #wpm-slider {
+  flex: 1 1 auto;
+  min-width: 0;
   width: 100%;
   -webkit-appearance: none;
   appearance: none;
@@ -712,7 +723,11 @@ input {
 
 #prompter-view.theme-light .prompter-controls {
   color: #131313;
-  background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.95) 82%, rgba(255,255,255,0) 100%);
+  background: rgba(255, 255, 255, 0.97);
+}
+
+#prompter-view.theme-light .prompter-controls::before {
+  background: linear-gradient(to top, rgba(255,255,255,0.97), rgba(255,255,255,0));
 }
 
 #prompter-view.theme-light .settings-panel {
@@ -830,16 +845,18 @@ input {
   .prompter-text.font-lg { font-size: clamp(25px, 5.0vw, 39px); }
   .prompter-text.font-xl { font-size: clamp(28px, 5.6vw, 44px); }
 
-  .prompter-controls { padding-top: 6px; padding-bottom: calc(8px + var(--safe-bottom)); gap: 6px; }
-  .icon-btn { width: 36px; height: 36px; font-size: 16px; }
-  .play-btn { width: 46px; height: 46px; font-size: 18px; }
-  .controls-row-mid { gap: 14px; }
+  .prompter-controls { padding-top: 4px; padding-bottom: calc(4px + var(--safe-bottom)); gap: 2px; }
+  .icon-btn { width: 32px; height: 32px; font-size: 15px; }
+  .icon-btn.small { width: 28px; height: 28px; }
+  .play-btn { width: 40px; height: 40px; font-size: 16px; }
 }
 
 /* Small phones */
 @media (max-width: 360px) {
   .app-title { font-size: 22px; }
-  .wpm-control { min-width: 118px; }
+  .controls-row-main { gap: 2px; }
+  .icon-btn { width: 32px; height: 32px; }
+  .icon-btn.small { width: 28px; height: 28px; }
 }
 
 /* Desktop / laptop: keep it centered and readable, not stretched edge to edge */
@@ -856,4 +873,6 @@ input {
     right: 0;
     border-radius: 18px 18px 0 0;
   }
+
+  .controls-row-main { justify-content: center; gap: 22px; }
 }
