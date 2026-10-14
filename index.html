@@ -106,44 +106,47 @@
          during playback (see settingsPanel wiring in app.js). -->
     <aside id="settings-panel" class="settings-panel">
 
-      <div class="controls-row controls-row-font">
-        <span class="control-label">Text size</span>
-        <div class="font-size-buttons" role="group" aria-label="Font size">
-          <button class="font-btn is-active" data-size="xs">XS</button>
-          <button class="font-btn" data-size="sm">S</button>
-          <button class="font-btn" data-size="md">M</button>
-          <button class="font-btn" data-size="lg">L</button>
-          <button class="font-btn" data-size="xl">XL</button>
+      <!-- Line 1: Text size & Background -->
+      <div class="settings-line">
+        <div class="settings-group group-wide">
+          <span class="control-label">Text size</span>
+          <div class="font-size-buttons" role="group" aria-label="Font size">
+            <button class="font-btn is-active" data-size="xs">XS</button>
+            <button class="font-btn" data-size="sm">S</button>
+            <button class="font-btn" data-size="md">M</button>
+            <button class="font-btn" data-size="lg">L</button>
+            <button class="font-btn" data-size="xl">XL</button>
+          </div>
+        </div>
+        <div class="settings-group group-narrow">
+          <span class="control-label">Background</span>
+          <div class="theme-buttons" role="group" aria-label="Background theme">
+            <button class="theme-btn is-active" data-theme="dark">Dark</button>
+            <button class="theme-btn" data-theme="light">Light</button>
+          </div>
         </div>
       </div>
 
-      <div class="controls-divider" aria-hidden="true"></div>
-
-      <div class="controls-row controls-row-focus">
-        <span class="control-label">Focus</span>
-        <div class="focus-buttons" role="group" aria-label="Focus zoom size">
-          <button class="focus-btn is-active" data-focus="100">Full</button>
-          <button class="focus-btn" data-focus="75">75%</button>
-          <button class="focus-btn" data-focus="50">50%</button>
-          <button class="focus-btn" data-focus="25">25%</button>
+      <!-- Line 2: Focus & Duration -->
+      <div class="settings-line">
+        <div class="settings-group group-wide">
+          <span class="control-label">Focus</span>
+          <div class="focus-buttons" role="group" aria-label="Focus zoom size">
+            <button class="focus-btn is-active" data-focus="100">Full</button>
+            <button class="focus-btn" data-focus="75">75%</button>
+            <button class="focus-btn" data-focus="50">50%</button>
+            <button class="focus-btn" data-focus="25">25%</button>
+          </div>
+        </div>
+        <div class="settings-group group-narrow">
+          <span class="control-label">Duration</span>
+          <div class="duration-input-group">
+            <input type="number" id="duration-input" min="1" max="120" placeholder="min" inputmode="numeric" aria-label="Target duration in minutes">
+            <button id="apply-duration-btn" class="btn btn-secondary btn-small">Apply</button>
+          </div>
         </div>
       </div>
 
-      <div class="controls-row controls-row-theme">
-        <span class="control-label">Background</span>
-        <div class="theme-buttons" role="group" aria-label="Background theme">
-          <button class="theme-btn is-active" data-theme="dark">Dark</button>
-          <button class="theme-btn" data-theme="light">Light</button>
-        </div>
-      </div>
-
-      <div class="controls-row controls-row-duration">
-        <span class="control-label">Duration</span>
-        <div class="duration-input-group">
-          <input type="number" id="duration-input" min="1" max="120" placeholder="min" inputmode="numeric" aria-label="Target duration in minutes">
-          <button id="apply-duration-btn" class="btn btn-secondary btn-small">Apply</button>
-        </div>
-      </div>
       <p id="duration-note" class="duration-note"></p>
 
     </aside>

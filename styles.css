@@ -645,47 +645,64 @@ input {
 }
 
 /* ---------------------------------------------------------------------- */
-/* Settings panel — compact, always-visible secondary settings in the   */
-/* bottom-right corner, just above the play/pace bar. Each row stacks      */
-/* a tiny label over its control.                                          */
+/* Settings panel — compact, always-visible, two lines tall, same       */
+/* height as the play/pace bar. Bottom-right corner (beside the bar on     */
+/* wide screens, just above it on narrow ones).                            */
 /* ---------------------------------------------------------------------- */
 
 .settings-panel {
   position: fixed;
-  /* Bottom-right corner, sitting just above the play bar and clear of the
-     scrub handle. --bar-h is kept in sync with the real bar height by JS. */
+  /* Narrow screens: sits just above the play bar, clear of the scrub handle.
+     --bar-h is kept in sync with the real bar height by JS. */
   right: calc(max(2px, var(--safe-right)) + 36px);
   bottom: calc(var(--bar-h, 75px) + 8px);
+  /* Same height as the play bar. */
+  height: var(--bar-h, 75px);
+  box-sizing: border-box;
   z-index: 10;
-  width: 148px;
   display: flex;
   flex-direction: column;
   gap: 3px;
-  padding: 7px 8px 8px;
+  padding: 4px 8px calc(4px + var(--safe-bottom));
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.97);
 }
 
-.settings-panel .controls-row {
+/* Two lines: (1) Text size & Background, (2) Focus & Duration. */
+.settings-line {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.settings-group {
+  display: flex;
   flex-direction: column;
-  align-items: stretch;
   gap: 2px;
+  min-width: 0;
 }
 
-.settings-panel .controls-divider {
-  display: none;
-}
+.group-wide { width: 132px; }
+.group-narrow { width: 98px; }
 
-.settings-panel .control-label {
+.settings-group .control-label {
+  flex: 0 0 auto;
   font-size: 9px;
   line-height: 1;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
-.settings-panel .font-size-buttons,
-.settings-panel .focus-buttons,
-.settings-panel .theme-buttons {
+/* The control row under each label fills the rest of the line's height. */
+.settings-group .font-size-buttons,
+.settings-group .focus-buttons,
+.settings-group .theme-buttons,
+.settings-group .duration-input-group {
+  flex: 1 1 0;
+  min-height: 0;
   width: 100%;
+  align-items: stretch;
   gap: 3px;
 }
 
@@ -694,42 +711,48 @@ input {
 .settings-panel .theme-btn {
   flex: 1 1 0;
   width: auto;
+  height: auto;
   min-width: 0;
-  height: 22px;
   padding: 0 2px;
   border-radius: 6px;
   font-size: 10px;
   letter-spacing: 0;
 }
 
-.settings-panel .duration-input-group {
-  width: 100%;
-  gap: 4px;
-}
-
 .settings-panel #duration-input {
   flex: 1 1 auto;
   width: 0;
   min-width: 0;
-  height: 22px;
+  height: auto;
   padding: 0 4px;
   border-radius: 6px;
   font-size: 11px;
 }
 
 .settings-panel .btn-small {
-  height: 22px;
+  flex: 0 0 auto;
+  height: auto;
   padding: 0 8px;
   border-radius: 6px;
   font-size: 10px;
   line-height: 1;
 }
 
+/* Result message after Apply pops up above the panel, so the panel itself
+   never changes height. */
 .settings-panel .duration-note {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  width: max-content;
+  max-width: 240px;
   margin: 0;
   min-height: 0;
-  font-size: 9px;
-  line-height: 1.2;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: inherit;
+  font-size: 10px;
+  line-height: 1.25;
 }
 
 .settings-panel .duration-note:empty {
@@ -897,12 +920,20 @@ input {
     margin: 0 auto;
   }
 
+  /* The settings panel (256px) lives in the bottom-right corner at the same
+     height as the bar, so the bar centres itself in the space to its left. */
   .prompter-controls {
     max-width: 640px;
     margin: 0 auto;
     left: 0;
-    right: 0;
+    right: calc(max(2px, var(--safe-right)) + 36px + 256px + 8px);
+    padding-right: max(14px, var(--safe-left));
     border-radius: 18px 18px 0 0;
+  }
+
+  .settings-panel {
+    bottom: 0;
+    border-radius: 14px 14px 0 0;
   }
 
   .controls-row-main { justify-content: center; gap: 22px; }

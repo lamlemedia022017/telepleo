@@ -570,10 +570,18 @@
 
   /* --- Duration-based speed --- */
 
+  // The result message floats above the settings panel, so let it clear itself.
+  let durationNoteTimer = null;
+  function showDurationNote(msg) {
+    durationNote.textContent = msg;
+    clearTimeout(durationNoteTimer);
+    durationNoteTimer = setTimeout(() => { durationNote.textContent = ''; }, 6000);
+  }
+
   applyDurationBtn.addEventListener('click', () => {
     const minutes = parseFloat(durationInput.value);
     if (!minutes || minutes <= 0 || state.totalWords <= 0) {
-      durationNote.textContent = 'Enter a target duration in minutes.';
+      showDurationNote('Enter a target duration in minutes.');
       return;
     }
     const idealWpm = state.totalWords / minutes;
@@ -581,11 +589,11 @@
     setWpmValue(applied);
 
     if (Math.round(idealWpm) !== applied) {
-      durationNote.textContent =
+      showDurationNote(
         'Ideal speed would be ' + Math.round(idealWpm) + ' WPM — clamped to ' + applied +
-        ' (the ' + (applied === MIN_WPM ? 'minimum' : 'maximum') + ' supported speed).';
+        ' (the ' + (applied === MIN_WPM ? 'minimum' : 'maximum') + ' supported speed).');
     } else {
-      durationNote.textContent = 'Speed set to ' + applied + ' WPM for a ~' + minutes + ' minute read.';
+      showDurationNote('Speed set to ' + applied + ' WPM for a ~' + minutes + ' minute read.');
     }
   });
 
