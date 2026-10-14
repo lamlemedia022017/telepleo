@@ -82,29 +82,11 @@
 
     <div id="prompter-controls" class="prompter-controls">
 
-      <div class="controls-row controls-row-main">
+      <!-- LEFT: exit + settings (two lines) -->
+      <div class="bar-left">
         <button id="exit-btn" class="icon-btn" title="Back to editor" aria-label="Exit to editor">✕</button>
-        <button id="restart-btn" class="icon-btn" title="Restart" aria-label="Restart">⟲</button>
-        <button id="play-pause-btn" class="play-btn" title="Play / Pause" aria-label="Play or pause">▶</button>
-        <div class="wpm-control">
-          <button id="wpm-down" class="icon-btn small" aria-label="Decrease speed">–</button>
-          <div class="wpm-readout"><span id="wpm-value">150</span><span class="wpm-unit">WPM</span></div>
-          <button id="wpm-up" class="icon-btn small" aria-label="Increase speed">+</button>
-        </div>
-        <button id="mirror-btn" class="icon-btn" title="Mirror mode" aria-label="Toggle mirror mode" aria-pressed="false">⇋</button>
-      </div>
 
-      <div class="controls-row controls-row-bottom">
-        <div class="time-remaining" id="time-remaining">0:00 left</div>
-        <input type="range" id="wpm-slider" min="100" max="200" step="1" value="150" aria-label="Reading speed in words per minute">
-      </div>
-
-    </div>
-
-    <!-- Settings panel: secondary settings pinned to the left edge, separate
-         from the play/pace bar above. Shares the same auto-hide behaviour
-         during playback (see settingsPanel wiring in app.js). -->
-    <aside id="settings-panel" class="settings-panel">
+        <aside id="settings-panel" class="settings-panel">
 
       <!-- Line 1: Text size & Background -->
       <div class="settings-line">
@@ -150,6 +132,29 @@
       <p id="duration-note" class="duration-note"></p>
 
     </aside>
+      </div>
+
+      <!-- CENTRE: restart · play · mirror -->
+      <div class="bar-center">
+        <button id="restart-btn" class="icon-btn" title="Restart" aria-label="Restart">⟲</button>
+        <button id="play-pause-btn" class="play-btn" title="Play / Pause" aria-label="Play or pause">▶</button>
+        <button id="mirror-btn" class="icon-btn" title="Mirror mode" aria-label="Toggle mirror mode" aria-pressed="false">⇋</button>
+      </div>
+
+      <!-- RIGHT: speed -->
+      <div class="bar-right">
+        <div class="wpm-control">
+          <button id="wpm-down" class="icon-btn small" aria-label="Decrease speed">–</button>
+          <div class="wpm-readout"><span id="wpm-value">150</span><span class="wpm-unit">WPM</span></div>
+          <button id="wpm-up" class="icon-btn small" aria-label="Increase speed">+</button>
+        </div>
+        <div class="controls-row controls-row-bottom">
+          <div class="time-remaining" id="time-remaining">0:00 left</div>
+          <input type="range" id="wpm-slider" min="100" max="200" step="1" value="150" aria-label="Reading speed in words per minute">
+        </div>
+      </div>
+
+    </div>
 
     <!-- First-run tip -->
     <div id="first-tip" class="first-tip is-hidden">
