@@ -702,9 +702,8 @@
     clearAutoHideTimer();
     autoHideTimer = setTimeout(() => {
       if (state.isPlaying && !state.scrubbing) {
-        // The bottom play/speed bar stays on screen while the script scrolls;
-        // only the settings panel and scrub handle fade away.
-        settingsPanel.classList.add('is-hidden');
+        // The bottom play/speed bar and the settings panel stay on screen
+        // while the script scrolls; only the scrub handle fades away.
         scrubTrack.classList.remove('is-visible');
       }
     }, 2200);
@@ -734,6 +733,15 @@
   controlsBar.addEventListener('pointerup', (e) => e.stopPropagation());
   settingsPanel.addEventListener('pointerdown', (e) => e.stopPropagation());
   settingsPanel.addEventListener('pointerup', (e) => e.stopPropagation());
+
+  // Keep the settings panel sitting just above the play bar, whatever the
+  // bar's height is (portrait, landscape, safe-area insets).
+  function syncBarHeight() {
+    const h = controlsBar.offsetHeight;
+    if (h > 0) document.documentElement.style.setProperty('--bar-h', h + 'px');
+  }
+  if (window.ResizeObserver) new ResizeObserver(syncBarHeight).observe(controlsBar);
+  window.addEventListener('resize', syncBarHeight);
 
   /* ---------------------------------------------------------------------
      First-run tip

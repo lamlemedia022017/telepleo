@@ -645,64 +645,95 @@ input {
 }
 
 /* ---------------------------------------------------------------------- */
-/* Settings panel — secondary settings pinned to the left edge, separate   */
-/* from the play/pace bar at the bottom. Each row stacks label-over-       */
-/* control in a narrow column, with tighter gaps than the old full-width   */
-/* bottom-bar layout.                                                      */
+/* Settings panel — compact, always-visible secondary settings in the   */
+/* bottom-right corner, just above the play/pace bar. Each row stacks      */
+/* a tiny label over its control.                                          */
 /* ---------------------------------------------------------------------- */
 
 .settings-panel {
   position: fixed;
-  left: max(10px, var(--safe-left));
-  top: 50%;
-  transform: translateY(-50%);
+  /* Bottom-right corner, sitting just above the play bar and clear of the
+     scrub handle. --bar-h is kept in sync with the real bar height by JS. */
+  right: calc(max(2px, var(--safe-right)) + 36px);
+  bottom: calc(var(--bar-h, 75px) + 8px);
   z-index: 10;
-  width: 168px;
-  max-height: calc(100% - 24px);
-  overflow-y: auto;
+  width: 148px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.78);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.settings-panel.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-50%) translateX(-10px);
+  gap: 3px;
+  padding: 7px 8px 8px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.97);
 }
 
 .settings-panel .controls-row {
   flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
+  align-items: stretch;
+  gap: 2px;
 }
 
 .settings-panel .controls-divider {
-  margin: 0;
+  display: none;
+}
+
+.settings-panel .control-label {
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.03em;
 }
 
 .settings-panel .font-size-buttons,
 .settings-panel .focus-buttons,
 .settings-panel .theme-buttons {
-  flex-wrap: wrap;
   width: 100%;
+  gap: 3px;
+}
+
+.settings-panel .font-btn,
+.settings-panel .focus-btn,
+.settings-panel .theme-btn {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  height: 22px;
+  padding: 0 2px;
+  border-radius: 6px;
+  font-size: 10px;
+  letter-spacing: 0;
 }
 
 .settings-panel .duration-input-group {
   width: 100%;
-  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.settings-panel #duration-input {
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+  height: 22px;
+  padding: 0 4px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.settings-panel .btn-small {
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  line-height: 1;
 }
 
 .settings-panel .duration-note {
-  margin-top: -2px;
+  margin: 0;
+  min-height: 0;
+  font-size: 9px;
+  line-height: 1.2;
 }
 
-@media (max-height: 560px) {
-  .settings-panel { gap: 4px; padding: 10px; width: 150px; }
+.settings-panel .duration-note:empty {
+  display: none;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -732,7 +763,7 @@ input {
 
 #prompter-view.theme-light .settings-panel {
   color: #131313;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
 }
 
 #prompter-view.theme-light .icon-btn,

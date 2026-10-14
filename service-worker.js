@@ -3,7 +3,7 @@
    once it's been opened at least once. Bump CACHE_NAME when you change
    any cached file so clients pick up the new version. */
 
-const CACHE_NAME = 'telepleo-online-20261014-bar';
+const CACHE_NAME = 'telepleo-online-20261014-settings';
 
 const CORE_ASSETS = [
   './',
